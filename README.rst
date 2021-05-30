@@ -26,7 +26,7 @@ Installation
 
     INSTALLED_APPS = [
         ...
-        'django-cropper-image',
+        'django_cropper_image',
     ]
 
 

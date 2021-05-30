@@ -1,1 +1,3 @@
 .vscode
+django_cropper_image.egg-info/
+dist/
