@@ -22,11 +22,11 @@ classifiers = [
  
 setup(
   name='django-cropper-image',
-  version='0.0.9',
+  version='1.0.0',
   description='django-cropper-image is an app for client side cropping and compressing uploaded images via Django 2.*',
   # long_description=open('README.txt').read() + '\n\n' + open('CHANGELOG.txt').read(),
   long_description=open('README.rst').read(),
-  url='',  
+  url='https://github.com/aneesh2usman/django_cropper_image',  
   author='aneesh usman',
   author_email='aneeshplusone@gmail.com',
   license='MIT', 

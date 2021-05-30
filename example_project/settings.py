@@ -69,8 +69,8 @@ TEMPLATES = [
         },
     },
 ]
-print('************os.path.join(BASE_DIR,templates)************')
-print(os.path.join(BASE_DIR,'templates'))
+# print('************os.path.join(BASE_DIR,templates)************')
+# print(os.path.join(BASE_DIR,'templates'))
 WSGI_APPLICATION = 'example_project.wsgi.application'
 
 
