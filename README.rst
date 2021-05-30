@@ -44,7 +44,7 @@ models
     from django-cropper-image.fields import ImageCropperField
 
     class Images(models.Model):
-        image = ImageCropperField(upload_to='image')
+        image = ImageCropperField(upload_to='image',max_length=255)
 
 forms
 =====
