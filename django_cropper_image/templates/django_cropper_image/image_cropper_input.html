@@ -1,0 +1,69 @@
+{% load i18n %}
+{% if widget.is_initial %}
+{% if not widget.required %}
+<input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}" style="display:none">
+<input type="checkbox" name="{{ widget.checkbox_name }}_delete" id="{{ widget.checkbox_id }}_delete" style="display:none">
+{% endif %}
+{% endif %}
+<div class="file btn btn-sm btn-outline-info position-relative">
+    <i class="la la-camera-retro"></i> {% trans 'Upload Image'%}
+    <input type="{{ widget.type }}" cropper-image=1 class="input-image-file" name="{{ widget.name }}"{% include "django_cropper_image/image_cropper_attrs.html" %}>  
+</div>
+<input type="hidden" name="{{ widget.name }}_full" value="{{widget.full}}" 
+{% if widget.attrs.id %}
+    id = "{{ widget.attrs.id|stringformat:'s' }}_full"
+{% endif %}
+>
+<input type="hidden" name="{{ widget.name }}_cropped" value="{{widget.cropped}}" 
+{% if widget.attrs.id %}
+    id = "{{ widget.attrs.id|stringformat:'s' }}_cropped"
+{% endif %}
+>
+<input type="hidden" name="{{ widget.name }}_x" value="{{widget.x}}" 
+{% if widget.attrs.id %}
+    id = "{{ widget.attrs.id|stringformat:'s' }}_x"
+{% endif %}
+>
+<input type="hidden" name="{{ widget.name }}_y" value="{{widget.y}}" 
+{% if widget.attrs.id %}
+    id = "{{ widget.attrs.id|stringformat:'s' }}_y"
+{% endif %}
+>
+<input type="hidden" name="{{ widget.name }}_h" value="{{widget.h}}" 
+
+{% if widget.attrs.id %}
+    id = "{{ widget.attrs.id|stringformat:'s' }}_h"
+{% endif %}
+>
+<input type="hidden" name="{{ widget.name }}_w" value="{{widget.w}}" 
+{% if widget.attrs.id %}
+    id = "{{ widget.attrs.id|stringformat:'s' }}_w"
+{% endif %}
+>
+<input type="hidden" name="{{ widget.name }}_r" value="{{widget.r}}" 
+{% if widget.attrs.id %}
+    id = "{{ widget.attrs.id|stringformat:'s' }}_r"
+{% endif %}
+>
+
+<input type="hidden" name="{{ widget.name }}_full_img" value="{{widget.full_img}}" 
+
+{% if widget.attrs.id %}
+    id = "{{ widget.attrs.id|stringformat:'s' }}_full_img"
+{% endif %}
+>
+
+<input type="hidden" name="{{ widget.name }}_change" value="{{widget.change}}" 
+
+{% if widget.attrs.id %}
+    id = "{{ widget.attrs.id|stringformat:'s' }}_change"
+{% endif %}
+>
+<input type="hidden" name="{{ widget.name }}_old_file_path" value="{{widget.old_file_path}}" 
+
+{% if widget.attrs.id %}
+    id = "{{ widget.attrs.id|stringformat:'s' }}_old_file_path"
+{% endif %}
+>
+
+{% include "django_cropper_image/image_cropper_container.html" %}

@@ -1,0 +1,8 @@
+include LICENSE.txt
+include CONTRIBUTORS
+include README.rst
+include MANIFEST.in
+recursive-include django_cropper_image/static *
+recursive-include django_cropper_image/templates *
+recursive-exclude example_project *
+recursive-exclude docs/_build *

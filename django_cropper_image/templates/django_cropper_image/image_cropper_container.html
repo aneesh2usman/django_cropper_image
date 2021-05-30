@@ -1,0 +1,71 @@
+{% load i18n %}
+<div class="container mt-3" 
+{% if widget.attrs.id %}
+  id = "{{ widget.attrs.id|stringformat:'s' }}-img-ctr-div"
+{% endif %}
+style="display: none;">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="{{ widget.name }}-img-ctr" style="display: none;"
+      
+      {% if widget.attrs.id %}
+        id = "{{ widget.attrs.id|stringformat:'s' }}_img-ctr"
+      {% endif %}
+      >
+     
+        {%if widget.full_image_url %}
+        <img src="" as=3 alt="{%trans 'Image'%}" height="auto" width="100%" >
+        {%else%}
+        <img src="" alt="{%trans 'Image'%}" as=1 height="auto" width="100%">
+        {%endif%}
+      </div>
+    </div>
+  </div>
+  <div class="row" 
+  {% if widget.attrs.id %}
+    id = "{{ widget.attrs.id|stringformat:'s' }}-actions"
+  {% endif %}
+  style="display: none;">
+    <div class="col-md-12 action-buttons">
+      <!-- <h3>Toolbar:</h3> -->
+      <div class="m-btn-group m-btn-group--pill btn-group">
+        <button type="button" class="m-btn btn btn-secondary" data-method="zoom" data-option="0.1" title="Zoom In">
+          <span class="docs-tooltip" data-toggle="tooltip" title="Zoom In">
+            <span class="fa fa-search-plus"></span>
+          </span>
+        </button>
+        <button type="button" class="m-btn btn btn-secondary" data-method="zoom" data-option="-0.1" title="Zoom Out">
+          <span class="docs-tooltip" data-toggle="tooltip" title="Zoom Out">
+            <span class="fa fa-search-minus"></span>
+          </span>
+        </button>
+      </div>
+      <div class="m-btn-group m-btn-group--pill btn-group">
+        <button type="button" class="m-btn btn btn-secondary" data-method="rotate" data-option="-45"
+          title="Rotate Left">
+          <span class="docs-tooltip" data-toggle="tooltip" title="Rotate Left">
+            <span class="fa fa-undo-alt"></span>
+          </span>
+        </button>
+        <button type="button" class="m-btn btn btn-secondary" data-method="rotate" data-option="45"
+          title="Rotate Right">
+          <span class="docs-tooltip" data-toggle="tooltip" title="Rotate Right">
+            <span class="fa fa-redo-alt"></span>
+          </span>
+        </button>
+      </div>
+      <div class="btn-group mr-2">
+        <button type="button" class="m-btn btn btn-secondary" data-method="reset" title="Reset">
+          <span class="docs-tooltip" data-toggle="tooltip" title="Reset">
+            <span class="fa fa-sync-alt"></span>
+          </span>
+        </button>
+        <button type="button" class="m-btn btn btn-secondary" data-method="disable" title="Delete Image">
+          <span class="docs-tooltip" data-toggle="tooltip" title="Delete Image">
+            <span class="fa fa-trash"></span>
+          </span>
+        </button>
+      </div>
+    </div><!-- /.action-buttons -->
+  </div>
+</div>
