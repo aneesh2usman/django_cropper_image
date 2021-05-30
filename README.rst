@@ -7,6 +7,7 @@ django-cropper-image is an app for client side cropping and compressing uploaded
 <https://github.com/fengyuanchen/cropperjs>`_.
 
 Screenshot:
+
 .. image:: https://github.com/aneesh2usman/django_cropper_image/blob/main/doc/Screenshot.png
 
 
