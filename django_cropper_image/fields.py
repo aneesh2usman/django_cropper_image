@@ -335,8 +335,7 @@ class FileFieldCropper(forms.FileField):
 							ext = mime_data[1]
 							data.update('full_ext',DEFAULT_EXT)
 							if data.cropper_data.get('orginal_ext'):
-								print('***************orginal_ext**********',mime_data)
-								print(mime_data)
+								
 								data.update('full_ext',ext)
 								data.update('ext',ext)
 							extension = '.'+ ext.lower()

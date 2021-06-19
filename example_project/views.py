@@ -46,7 +46,6 @@ class ImageView(View):
 			form = ImageForm(request.POST or None,request.FILES or None)
 			if request.POST and form.is_valid():
 				form.save()
-				print(form.__dict__)
 				return HttpResponseRedirect(reverse('image_edit',kwargs={'id':form.instance.pk})) 
 		context['form'] =form
 		context['form_media'] =form.media

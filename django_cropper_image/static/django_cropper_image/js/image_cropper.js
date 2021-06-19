@@ -123,7 +123,6 @@
 			},
 			plugin.getCanvas= function(settings =plugin.settings , imagetype =plugin.default_ext){
 				canvas =''
-				console.log('*********getCanvas*settings********8',settings,settings.orginal_extension,imagetype)
 				if (settings.orginal_extension==true && plugin.uploadedImageType !=plugin.default_ext ){
 					canvas = plugin.cropper.getCroppedCanvas().toDataURL()
 				} else{
@@ -441,7 +440,6 @@
 				if(type =="compress" && image.width >= parseFloat(settings.maxmainimagewidth)){
 					comps_ratio = image.width/parseFloat(settings.maxmainimagewidth)
 				}
-				console.log('**********imagefggfg******')
 				canvas.width=image.width/comps_ratio;
 				canvas.height=image.height/comps_ratio;
 				context.drawImage(image,
