@@ -58,7 +58,6 @@
 			
 			plugin.init = function() {
 				plugin.getDefault()
-				// console.log('*****plugin.settingsgffgfg*********',plugin.settings)
 				if (plugin.initiator.data_h && plugin.initiator.data_w && plugin.initiator.data_x && plugin.initiator.data_y) {
 					plugin.initiator.defaultCrop = { "width": parseFloat(plugin.initiator.data_w), "height": parseFloat(plugin.initiator.data_h),"x" : parseFloat(plugin.initiator.data_x),"y" : parseFloat(plugin.initiator.data_y),"rotate" : parseFloat(plugin.initiator.data_r)};
 				} 
