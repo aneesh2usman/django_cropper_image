@@ -14,7 +14,7 @@ class ImageForm(ModelForm):
 			# 'data-maxCropWidth' : 600,
 			# 'data-maxCropHeight' :600,
             'data-cropRestrict':"true",
-            # 'data-orginal_extension':"true",
+            'data-orginal_extension':"true",
         })
       
     class Meta:

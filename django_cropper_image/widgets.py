@@ -71,7 +71,7 @@ class CropperConstant(object):
 		return self.cropper_data
 class FileInputCropper(widgets.Input):
 	class Media:
-		js = ('django_cropper_image/js/cropper.min.js','django_cropper_image/js/image_cropper.js',)
+		js = ('django_cropper_image/js/cropper.min.js','django_cropper_image/js/image_cropper.min.js',)
 		css = {'all':('django_cropper_image/css/cropper.min.css','django_cropper_image/css/image_cropper.css',)}
 	template_name = 'django_cropper_image/image_cropper_input.html'
 	
