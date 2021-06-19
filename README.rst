@@ -5,6 +5,8 @@ django-cropper-image
 
 django-cropper-image is an app for client side cropping and compressing uploaded images via Django's app using with help cropper.js `cropperjs
 <https://github.com/fengyuanchen/cropperjs>`_.
+github `django-cropper-image
+<https://github.com/aneesh2usman/django_cropper_image>`_.
 
 Screenshot:
 
@@ -73,7 +75,8 @@ forms
                 'data-fileresolution' : 0.7, #.0.7 medium resolution
                 'data-fillcolor' : '#fff', #color of the cropped image background
                 'data-maxmainimagewidth' : 2000, #uploaded image maximum width height take accordingily
-                'data-compress':"true", # compress yes:No
+                'data-compress':"true", # compress yes:No (Default : true)
+                'data-orginal_extension':"false", # (Default : false)  if .png no chnage in png file otherwise convert jpg
 
 
             })

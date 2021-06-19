@@ -39,16 +39,18 @@
   </header>
 
   <div class="container">
-    <div class="card text-center">
+    <div class="card text-center ">
       <div class="card-header">
         Django Image Cropper
       </div>
-      <div class="card-body" >
-        <form method="{{form.method|default:'POST'}}" enctype="multipart/form-data" class="{{form.class}} m-form m-form--fit m-form--label-align-right" action="{{form.action|default:request.path}}" novalidate>
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit" value="Submit">
-        </form>
+      <div class="card-body container col-md-5" >
+        <div class="container">
+          <form method="{{form.method|default:'POST'}}" enctype="multipart/form-data" class="{{form.class}} m-form m-form--fit m-form--label-align-right" action="{{form.action|default:request.path}}" novalidate>
+              {% csrf_token %}
+              {{ form }}
+              <input type="submit" value="Submit">
+          </form>
+        </div>
       </div>
       <div class="card-footer text-muted">
         Support Django 2+

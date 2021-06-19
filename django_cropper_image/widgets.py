@@ -2,6 +2,7 @@ from django.forms import widgets
 from django.conf import settings
 from hashlib import md5
 import time
+DEFAULT_EXT ='jpg'
 class CropperConstant(object):
 	def __init__(self):
 		self.assign()
@@ -19,9 +20,12 @@ class CropperConstant(object):
 			'full_image_url':'',
 			'old_file_path':'',
 			'change':1,
-			'ext':'jpg',
+			'ext':DEFAULT_EXT,
 			'filename':'dummy',
 			'full_save':True,
+			'full_ext':DEFAULT_EXT,
+			'orginal_ext':False,
+			'old_file_path_save':False,
 
 		}
 		return self.cropper_data
@@ -60,11 +64,14 @@ class CropperConstant(object):
 				}
 			)
 		return self.cropper_data
+	def update(self,key=None,value=None):
+		self.cropper_data.update({key:value})
+
 	def get(self):
 		return self.cropper_data
 class FileInputCropper(widgets.Input):
 	class Media:
-		js = ('django_cropper_image/js/cropper.min.js','django_cropper_image/js/image_cropper.min.js',)
+		js = ('django_cropper_image/js/cropper.min.js','django_cropper_image/js/image_cropper.js',)
 		css = {'all':('django_cropper_image/css/cropper.min.css','django_cropper_image/css/image_cropper.css',)}
 	template_name = 'django_cropper_image/image_cropper_input.html'
 	
@@ -73,6 +80,8 @@ class FileInputCropper(widgets.Input):
 		super().__init__(attrs)
 		self.cropperconstobj = CropperConstant()
 		self.cropper_data = self.cropperconstobj.cropper_data
+		
+		
 	def get_context(self, name, value, attrs):
 		if value and isinstance(value, str):
 			self.cropper_data.update({'full':''})
@@ -83,6 +92,8 @@ class FileInputCropper(widgets.Input):
 		self.get_full_image(value)
 		self.get_cropped_image_coordinates(value)
 		self.context = super().get_context(name, value, attrs)
+		if self.attrs.get('data-orginal_extension'):
+			self.cropper_data.update({'orginal_ext': True})
 		self.cropper_data.update({'image_url': ''})
 		self.cropper_data.update({'change': 1})
 		self.cropper_data.update({'full_save':True})
@@ -103,7 +114,10 @@ class FileInputCropper(widgets.Input):
 				imagenamessplits = value.split("_crop")
 				self.cropper_data.update({'old_file_path': value})
 				ext = value.split(".")[-1]
+				
+
 				full_image_data = imagenamessplits[0] + '.' + ext
+
 				if  not self.cropper_data['full']:
 					self.cropper_data.update(
 						{

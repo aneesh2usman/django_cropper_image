@@ -21,9 +21,10 @@
 					fillcolor : '#fff',
 					maxmainimagewidth : 2000,
 					compress:true,
+					orginal_extension:false,
 			}
 			let plugin = this;
-			
+			plugin.default_ext = 'image/jpeg';
 			plugin.settings = {}
 			plugin.coords = ["h","w","x","y","r"];
 			plugin.img_id = $(plugin).attr('id')
@@ -91,7 +92,7 @@
 					cropend: function (e) {
 						Coordinates = plugin.GetCoordinates();
 						plugin.SetCoordinates(Coordinates)
-						$("#" + plugin.img_id + "_cropped").val(plugin.cropper.getCroppedCanvas(plugin.canvas_option(plugin.settings)).toDataURL(plugin.uploadedImageType))     
+						$("#" + plugin.img_id + "_cropped").val(plugin.getCanvas())     
 						$(plugin.delete_image_id+"_delete").attr('checked','checked')
 						},
 						crop: function (e) {
@@ -102,7 +103,7 @@
 								Coordinates = plugin.GetCoordinates();
 								plugin.setMinMaxCrop()
 								plugin.SetCoordinates(Coordinates)
-								$("#" + plugin.img_id + "_cropped").val(plugin.cropper.getCroppedCanvas(plugin.canvas_option(plugin.settings)).toDataURL(plugin.uploadedImageType))
+								$("#" + plugin.img_id + "_cropped").val(plugin.getCanvas())
 							$(plugin.delete_image_id+"_delete").attr('checked','checked')
 						}, 500);
 					},
@@ -120,7 +121,16 @@
 				//call cropper init
 				plugin.CropperInit()
 			},
-			
+			plugin.getCanvas= function(settings =plugin.settings , imagetype =plugin.default_ext){
+				canvas =''
+				console.log('*********getCanvas*settings********8',settings,settings.orginal_extension,imagetype)
+				if (settings.orginal_extension==true && plugin.uploadedImageType !=plugin.default_ext ){
+					canvas = plugin.cropper.getCroppedCanvas().toDataURL()
+				} else{
+					canvas = plugin.cropper.getCroppedCanvas(plugin.canvas_option(settings)).toDataURL(imagetype)
+				}
+				return canvas
+			}
 			plugin.cropperobj = function(){
 				plugin.cropper = new plugin.initiator.Cropper(plugin.initiator.image, plugin.crop_options);
 
@@ -226,7 +236,7 @@
 							Coordinates = plugin.GetCoordinates();
 							plugin.SetCoordinates(Coordinates)
 							setTimeout(function () {
-								$("#" + plugin.img_id + "_cropped").val(plugin.cropper.getCroppedCanvas(plugin.canvas_option(plugin.settings)).toDataURL(plugin.uploadedImageType))
+								$("#" + plugin.img_id + "_cropped").val(plugin.getCanvas())
 								$(plugin.delete_image_id+"_delete").attr('checked','checked')
 							}, 400);
 							if (cropped && plugin.crop_options.viewMode > 0) {
@@ -236,13 +246,13 @@
 						case 'move':
 							Coordinates = plugin.GetCoordinates();		
 							plugin.SetCoordinates(Coordinates)
-							$("#" + plugin.img_id + "_cropped").val(plugin.cropper.getCroppedCanvas(plugin.canvas_option(plugin.settings)).toDataURL(plugin.uploadedImageType))
+							$("#" + plugin.img_id + "_cropped").val(plugin.getCanvas())
 							$(plugin.delete_image_id+"_delete").attr('checked','checked')
 							break;
 						case 'reset':
 							Coordinates = plugin.GetCoordinates();		
 							plugin.SetCoordinates(Coordinates)
-							$("#" + plugin.img_id + "_cropped").val(plugin.cropper.getCroppedCanvas(plugin.canvas_option(plugin.settings)).toDataURL(plugin.uploadedImageType))
+							$("#" + plugin.img_id + "_cropped").val(plugin.getCanvas())
 							$(plugin.delete_image_id+"_delete").attr('checked','checked')
 							mincrop = plugin.setMinMaxCrop()
 							break;
@@ -392,14 +402,15 @@
 						setTimeout(function () {
 							Coordinates = plugin.GetCoordinates();
 							plugin.SetCoordinates(Coordinates)
-							var FR= new FileReader();
-		
-							FR.addEventListener("load", function(e) {
-								$("#" + plugin.img_id + "_full").val(e.target.result)
-							}); 
+							full_image = plugin.convertImage(new_image)
+							// var FR= new FileReader();
+							// FR.addEventListener("load", function(e) {
+							// 	$("#" + plugin.img_id + "_full").val(e.target.result)
+							// }); 
+							// FR.readAsDataURL( file );
+							$("#" + plugin.img_id + "_full").val(full_image)
 							
-							FR.readAsDataURL( file );
-							$("#" + plugin.img_id+ "_cropped").val(plugin.cropper.getCroppedCanvas(plugin.canvas_option(plugin.settings)).toDataURL("image/jpeg",plugin.uploadedImageType))
+							$("#" + plugin.img_id+ "_cropped").val(plugin.getCanvas())
 							
 						}, 400);
 					}catch(err) {
@@ -423,8 +434,39 @@
 				$(plugin.delete_image_id).removeAttr('checked')
 				$(plugin.delete_image_id + "_deleteonly").removeAttr('checked')
 			}
-			plugin.compressImage = function (file){
+			plugin.convertImage =function(image,type="compress",settings = plugin.settings,ext = plugin.default_ext){
+				var canvas=document.createElement("canvas");
+				var context=canvas.getContext("2d");
+				comps_ratio =1
+				if(type =="compress" && image.width >= parseFloat(settings.maxmainimagewidth)){
+					comps_ratio = image.width/parseFloat(settings.maxmainimagewidth)
+				}
+				console.log('**********imagefggfg******')
+				canvas.width=image.width/comps_ratio;
+				canvas.height=image.height/comps_ratio;
+				context.drawImage(image,
+					0,
+					0,
+					image.width,
+					image.height,
+					0,
+					0,
+					canvas.width,
+					canvas.height
+				);
+				if (settings.orginal_extension==true){
+					ext = plugin.uploadedImageType
+				}
+				if (type=="compress"){
+					compres = canvas.toDataURL(ext,settings.fileresolution);
+				} else {
+					compres = canvas.toDataURL(ext);
+				}
 				
+				return compres
+			}
+			plugin.compressImage = function (file){
+			
 				//https://embed.plnkr.co/plunk/oyaVFn
 				var FR= new FileReader();
 				FR.readAsDataURL( file );
@@ -433,28 +475,9 @@
 					var image2 = new Image();
 					image2.onload=function(){
 						plugin.setDisplay()
-						var canvas=document.createElement("canvas");
-						var context=canvas.getContext("2d");
-						comps_ratio =1
-						if(image2.width >= parseFloat(plugin.settings.maxmainimagewidth)){
-							comps_ratio = image2.width/parseFloat(plugin.settings.maxmainimagewidth)
-						}
-						
-						canvas.width=image2.width/comps_ratio;
-						canvas.height=image2.height/comps_ratio;
-						context.drawImage(image2,
-							0,
-							0,
-							image2.width,
-							image2.height,
-							0,
-							0,
-							canvas.width,
-							canvas.height
-						);
-						compres = canvas.toDataURL("image/jpeg",plugin.settings.fileresolution);
+						compres = plugin.convertImage(image2,type="compress")
 						plugin.initiator.image.src = plugin.uploadedImageURL = compres
-						compres
+						
 						plugin.cropper.destroy();
 						plugin.cropper = new plugin.initiator.Cropper(plugin.initiator.image, plugin.crop_options);
 						setTimeout(function () {
@@ -462,7 +485,7 @@
 							Coordinates = plugin.GetCoordinates();
 							plugin.SetCoordinates(Coordinates)
 							$("#" + plugin.img_id + "_full").val(plugin.initiator.image.src)
-							$("#" + plugin.img_id + "_cropped").val(plugin.cropper.getCroppedCanvas(plugin.canvas_option(plugin.settings)).toDataURL(plugin.uploadedImageType))
+							$("#" + plugin.img_id + "_cropped").val(plugin.getCanvas())
 							
 						}, 400);
 						

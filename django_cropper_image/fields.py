@@ -14,7 +14,8 @@ from django.core.files.base import ContentFile
 import datetime
 import posixpath
 from django.core import checks
-
+from PIL import Image
+DEFAULT_EXT ='jpg'
 '''
 Model field 
 '''
@@ -137,7 +138,6 @@ class ImageCropperField(models.Field):
 			filename2 = self.b64data['full'].split("/")[-1]
 			self.generated_name = filename2.split(".")[0]
 		try:
-			
 			crop_image= settings.MEDIA_ROOT+'/'+self.b64data['old_file_path']
 			self.storage.delete(crop_image)
 		except Exception as e:
@@ -171,9 +171,11 @@ class ImageCropperField(models.Field):
 		name = filename+'_crop_' + x.replace('.', '--d--') + '_'+ y.replace('.', '--d--') +'_'+ w.replace('.', '--d--') + '_'+h.replace('.', '--d--') + '_'+r.replace('.', '--d--')  
 		return name
 	def get_img_extension(self):
-		ext = 'jpg'
+		ext = DEFAULT_EXT
 		if 'ext' in self.b64data and self.b64data['ext']:
 			ext =  self.b64data['ext']
+		if hasattr(self,'flag') and self.flag != "crop" and self.b64data.get('full_ext'):
+			ext = self.b64data['full_ext']
 		return ext
 
 	def pre_save(self, model_instance, add):
@@ -187,6 +189,9 @@ class ImageCropperField(models.Field):
 		if self and self.name and self.b64data:
 			if 'delete_only' in self.b64data and self.b64data['delete_only']:
 				pass
+			elif self.b64data.get('old_file_path_save') and self.b64data.get('old_file_path'):
+				self.save_old_file_orginal()
+			
 			else:
 				if 'cropped' in self.b64data and self.b64data['cropped']:
 					
@@ -219,10 +224,34 @@ class ImageCropperField(models.Field):
 	def save_orginal(self,data,model_instance):
 		if self.b64data['full_save']:
 			format, imgstr = data.split(';base64,') 
-			
 			data = ContentFile(base64.b64decode(imgstr))
 			self.save_base64(self.b64data['filename_prefix'], data,model_instance)
-
+	def save_old_file_orginal(self):
+		self.save_old_full_file_orginal()
+		self.save_old_cropped_file_orginal()	
+	def save_old_full_file_orginal(self):
+		ext =DEFAULT_EXT
+		if  self.b64data.get('old_file_path') and self.b64data.get('full'):
+			open_filepath = settings.MEDIA_ROOT+self.b64data['full'].replace(settings.MEDIA_URL,'/')
+			old_ext = self.b64data['full'].split(".")[-1]
+			save_file = self.b64data['full'].replace(settings.MEDIA_URL,'').replace(old_ext,ext)
+			self.save_via_path(open_filepath,save_file)
+	def save_old_cropped_file_orginal(self):
+		ext =DEFAULT_EXT
+		if  self.b64data.get('old_file_path') and self.b64data.get('full'):
+			open_filepath = settings.MEDIA_ROOT+'/'+self.b64data['old_file_path']
+			old_ext = self.b64data['old_file_path'].split(".")[-1]
+			save_file = self.b64data['old_file_path'].replace(settings.MEDIA_URL,'').replace(old_ext,ext)
+			self.save_via_path(open_filepath,save_file)
+			self.filepath =save_file
+	def save_via_path(self,open_filepath="",save_filepath=""):
+		save_filepath = settings.MEDIA_ROOT+'/'+save_filepath
+		# open_file =self.storage.open(open_filepath)
+		# self.storage.save(save_filepath, open_file)
+		im = Image.open(open_filepath)
+		rgb_im = im.convert("RGB")
+		rgb_im.save(save_filepath)
+		self.storage.delete(open_filepath)
 	def save_base64(self,name, content,model_instance, save=True):
 		name = self.generate_filename(model_instance, name)
 		filepath = self.storage.save(name, content)
@@ -277,6 +306,7 @@ class FileFieldCropper(forms.FileField):
 		"""
 		extract_data = data.get()
 		baseb4images = ['full','cropped']
+		file_not_validate =True
 		self.get_extentions()
 		for baseb4image in baseb4images:
 			if baseb4image in extract_data and extract_data[baseb4image]:
@@ -291,11 +321,24 @@ class FileFieldCropper(forms.FileField):
 						if self.storage.exists(full_image_url):
 							validate =False
 							extract_data['full_save'] =False
+				#when change orginal_extension itermediate on edit
+				if baseb4image =="full" and extract_data.get('old_file_path'):
+					ext = extract_data.get('old_file_path').split(".")[-1]
+					if  not extract_data.get('orginal_ext') and ext != DEFAULT_EXT:
+						extract_data['full_save'] =True
+						data.update('old_file_path_save',True)
+						file_not_validate =False
 				try:		
 					if validate:
 						mime_data = filetype.split("/")
 						if mime_data:
 							ext = mime_data[1]
+							data.update('full_ext',DEFAULT_EXT)
+							if data.cropper_data.get('orginal_ext'):
+								print('***************orginal_ext**********',mime_data)
+								print(mime_data)
+								data.update('full_ext',ext)
+								data.update('ext',ext)
 							extension = '.'+ ext.lower()
 							if not extension in self.extentions:
 								extstr =  self.extentions
@@ -319,8 +362,13 @@ class FileFieldCropper(forms.FileField):
 							
 						)
 			else :
-				if extract_data['full_save'] == True and self.required == False:
-					return extract_data
+				if self.required == False:
+					if extract_data.get('full_save'):
+						return data
+				elif not extract_data.get('full_save') and validate == False:
+					return data
+				elif not file_not_validate:
+					return data
 				else:
 					raise ValidationError(
 								self.error_messages['file_not_found'],
