@@ -43,7 +43,7 @@ models
 #. ``Models.py``::
 
     from django.db import models
-    from django-cropper-image.fields import ImageCropperField
+    from django_cropper_image.fields import ImageCropperField
 
     class Images(models.Model):
         image = ImageCropperField(upload_to='image',max_length=255)
