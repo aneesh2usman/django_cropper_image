@@ -6,9 +6,9 @@ class CropperSettings(object):
 	def default(self):
 		settings_default ={
 			'EXCLUDE_CROPPERJS':False,
-			'CROPPERJS_STATIC_JS':['django_cropper_image/js/cropper.min.js'],
-			'CROPPERJS_STATIC_CSS':['django_cropper_image/css/cropper.min.css'],
-			'CUSTOM_STATIC_JS':'django_cropper_image/js/image_cropper.js',
+			'CROPPERJS_STATIC_JS':'django_cropper_image/js/cropper.min.js',
+			'CROPPERJS_STATIC_CSS':'django_cropper_image/css/cropper.min.css',
+			'CUSTOM_STATIC_JS':'django_cropper_image/js/image_cropper.min.js',
 			'CUSTOM_STATIC_CSS':'django_cropper_image/css/image_cropper.css',
 			'TEMPLATES':'django_cropper_image/image_cropper_input.html',
 		}
