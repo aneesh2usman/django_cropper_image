@@ -25,20 +25,39 @@ Installation
 
     pip install django-cropper-image
 
-
-    INSTALLED_APPS = [
-        ...
-        'django_cropper_image',
-    ]
-
-
 Configuration
 =============
 
-Add an ``ImageCropperField`` to the model that images you want to crop.you don't worried about if form error occure the image is remove 
+
+#. ``settings.py``::
+
+INSTALLED_APPS = [
+        ...
+        'django_cropper_image',
+    ]
+'''
+DJANGO_CROPPER_IMAGE_SETTINGS is optional
+
+Notes : Please use 
+        if you use "EXCLUDE_CROPPERJS" please manually include your cropper js and css files
+
+Warning : Change only if you need to CROPPERJS_STATIC_JS,CROPPERJS_STATIC_CSS,CUSTOM_STATIC_JS,CUSTOM_STATIC_CSS,TEMPLATES
+'''
+
+DJANGO_CROPPER_IMAGE_SETTINGS ={
+    'EXCLUDE_CROPPERJS':False, #can excude cropperjs js and css files
+    'CROPPERJS_STATIC_JS':'django_cropper_image/js/cropper.min.js', # can change cropper js file
+    'CROPPERJS_STATIC_CSS':'django_cropper_image/css/cropper.min.css',# can change cropper css file
+    'CUSTOM_STATIC_JS':'django_cropper_image/js/image_cropper.js', # can change django_cropper_image module custom js
+    'CUSTOM_STATIC_CSS':'django_cropper_image/css/image_cropper.css', # can change django_cropper_image module custom css
+    'TEMPLATES':'django_cropper_image/image_cropper_input.html', # can change django_cropper_image module template files
+}
+
 
 models 
 ======
+
+Add an ``ImageCropperField`` to the model that images you want to crop.you don't worried about if form error occure the image is remove 
 
 #. ``Models.py``::
 
@@ -64,10 +83,10 @@ forms
             self.fields['image'].widget.attrs.update({
                 'data-aspectratio_w':16, #aspect ratio of width (Default : 1)
                 'data-aspectratio_h':9, #aspect ratio of height (Default : 1)
-                'data-minCropWidth' : 300, #minimum crop width 
-                'data-minCropHeight' : 300, #minimum crop height 
-                'data-maxCropWidth' : 600, #maximum crop width
-                'data-maxCropHeight' :600, #maximum crop height
+                'data-mincropWidth' : 300, #minimum crop width 
+                'data-mincropHeight' : 300, #minimum crop height 
+                'data-maxcropWidth' : 600, #maximum crop width
+                'data-maxcropHeight' :600, #maximum crop height
                 'data-cropRestrict':"true", #minimum and maximum  work only when cropRestrict true
                 'data-mincontainerwidth' : 300, #minimum width of image container
                 'data-mincontainerheight' : 300,#minimum height of image container

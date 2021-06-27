@@ -8,12 +8,11 @@ class ImageForm(ModelForm):
         self.fields['image'].widget.attrs.update({
             'data-aspectratio_w':16,
 			'data-aspectratio_h':9,
-            
-			'data-minCropWidth' :100,
-			'data-minCropHeight' : 100,
+			# 'data-mincropWidth' :500,
+			# 'data-mincropHeight' : 500,
 			# 'data-maxCropWidth' : 600,
 			# 'data-maxCropHeight' :600,
-            'data-cropRestrict':"true",
+            'data-croprestrict':"true",
             'data-orginal_extension':"true",
         })
       

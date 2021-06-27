@@ -127,3 +127,19 @@ STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+'''
+Notes : if you use "EXCLUDE_CROPPERJS" please manually include your cropper js and css files
+
+Warning : Change only if you need to CROPPERJS_STATIC_JS,CROPPERJS_STATIC_CSS,CUSTOM_STATIC_JS,CUSTOM_STATIC_CSS,TEMPLATES
+'''
+
+DJANGO_CROPPER_IMAGE_SETTINGS ={
+    'EXCLUDE_CROPPERJS':False, #can excude cropperjs js and css files
+    
+    'CROPPERJS_STATIC_JS':'django_cropper_image/js/cropper.min.js', # can change cropper js file
+    'CROPPERJS_STATIC_CSS':'django_cropper_image/css/cropper.min.css',# can change cropper css file
+    'CUSTOM_STATIC_JS':'django_cropper_image/js/image_cropper.js', # can change django_cropper_image module custom js
+    'CUSTOM_STATIC_CSS':'django_cropper_image/css/image_cropper.css', # can change django_cropper_image module custom css
+    'TEMPLATES':'django_cropper_image/image_cropper_input.html', # can change django_cropper_image module template files
+}

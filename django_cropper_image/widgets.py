@@ -1,8 +1,11 @@
 from django.forms import widgets
 from django.conf import settings
+from .config import CropperSettings
 from hashlib import md5
 import time
 DEFAULT_EXT ='jpg'
+cropper_settings = CropperSettings()
+
 class CropperConstant(object):
 	def __init__(self):
 		self.assign()
@@ -71,9 +74,12 @@ class CropperConstant(object):
 		return self.cropper_data
 class FileInputCropper(widgets.Input):
 	class Media:
-		js = ('django_cropper_image/js/cropper.min.js','django_cropper_image/js/image_cropper.min.js',)
-		css = {'all':('django_cropper_image/css/cropper.min.css','django_cropper_image/css/image_cropper.css',)}
-	template_name = 'django_cropper_image/image_cropper_input.html'
+		js = [cropper_settings('CUSTOM_STATIC_JS')]
+		css = {'all':[cropper_settings('CUSTOM_STATIC_CSS')]}
+		if not cropper_settings('EXCLUDE_CROPPERJS'):
+			js.insert(0, cropper_settings('CROPPERJS_STATIC_JS'))
+			css['all'].insert(0, cropper_settings('CROPPERJS_STATIC_CSS'))
+	template_name = cropper_settings('TEMPLATES')
 	
 	input_type = 'file' 
 	def __init__(self, attrs=None):
