@@ -181,7 +181,10 @@ class ImageCropperField(models.Field):
 	def pre_save(self, model_instance, add):
 		"""Return field's value just before saving."""
 		self.cropperconstobj = getattr(model_instance, self.attname)
-		self.b64data = self.cropperconstobj.get()
+		if isinstance(self.cropperconstobj, str):
+			self.b64data = ''
+		else:
+			self.b64data = self.cropperconstobj.get()
 		if self.b64data and isinstance(self.b64data, str) or self.b64data =='':
 			return self.b64data
 		cropping_image =False
